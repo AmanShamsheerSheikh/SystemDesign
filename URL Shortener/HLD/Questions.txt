@@ -1,0 +1,42 @@
+## URL Shortener — Self-Check Questions for Revision
+
+Use these cold, without looking back at the thread. If you can answer all of these without hesitating, you've actually retained the reasoning, not just the diagram.
+
+**Traffic estimation**
+1. Given monthly write/read counts, walk through the full chain to peak QPS — name every step, don't skip to the answer.
+2. Why do you apply a peak multiplier at all? Why might 2x be wrong for this specific system?
+3. What's the actual error if you size a component off average QPS instead of peak? Why does it matter *which direction* the error goes?
+
+**Component sizing — the general pattern**
+4. State the three-step process that applies to sizing *any* component, before naming a single number.
+5. For each of these, what's the "load that actually reaches it," and why is it filtered differently: App Server, Redis, DB Replica, DB Master?
+6. Is cache hit rate calculated or assumed? Why does that distinction matter to how you present it out loud?
+
+**Redis**
+7. Why does Redis's per-instance ceiling differ so drastically from Postgres's? Name the actual mechanism, not just "it's faster."
+8. At very-high volume, is one Redis node "enough"? Under what framing does that answer flip?
+9. If someone challenges "you're under capacity, how could it still go down" — what's your answer, precisely?
+10. What's the tradeoff of write-through caching on link creation? What's the middle-ground fix, and why does it work?
+
+**Database**
+11. Why do reads never go to Master, even though Master technically *could* serve them?
+12. What's the one real exception where reading from Master (or an equivalent workaround) is justified?
+13. Why does Master stay at 1 far longer than any other component? What's structurally different about scaling it?
+14. What's the escalation order when Master write volume actually becomes a problem, and why that order?
+15. If sharding, what would you shard by, and why does that choice matter for the read path specifically?
+16. What actually happens to existing data when you naively reshard (`% num_shards`) — and what technique avoids it?
+
+**Load Balancer**
+17. Why doesn't the standard `load/capacity` formula meaningfully apply to sizing load balancers?
+18. What are the two real reasons to run more than one LB, and are either of them about throughput?
+
+**Write path & consistency**
+19. In the write flow, does order matter between writing to Master and writing to Redis? What breaks if you get it backwards?
+20. What does the arrow from Master to Read Replica represent, and why does it need to be visually distinct from other arrows in the diagram?
+21. Describe the exact failure scenario that read-after-write inconsistency causes for a real user.
+
+**Design process**
+22. Should Redis appear in your diagram from the first box, or should you earn it? What's the actual reasoning move that justifies adding it?
+23. At medium volume, most components round to 1-2. What's the correct thing to say out loud when that happens, instead of just presenting the numbers?
+
+If any of these make you pause and reach for the thread instead of reasoning it out live, that's your revision list — not the diagram itself.
