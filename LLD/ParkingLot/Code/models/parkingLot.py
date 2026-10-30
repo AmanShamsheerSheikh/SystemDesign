@@ -31,7 +31,7 @@ class ParkingLot:
         return None
 
     def unPark(self, ticketId: str, currentTime: datetime):
-        ticket = self.activeTickets[ticketId]
+        ticket = self.activeTickets.get(ticketId)
         if ticket:
             price = self.pricingStrategy.calculatePrice(ticket, currentTime)
             ticket.floor.freeSpot(ticket.spot)
