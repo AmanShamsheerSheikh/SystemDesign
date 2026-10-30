@@ -20,7 +20,7 @@ def main():
         availaibleSpots: dict[SpotType, deque[Spot]] = {t: deque() for t in SpotType}
         for _ in range(numSpots):
             spotType = random.choice(list(SpotType))
-            spot = Spot(uuid.uuid4(), i, spotType)
+            spot = Spot(str(uuid.uuid4()), i, spotType)
             availaibleSpots[spotType].append(spot)
             spots.append(spot)
         floors.append(Floor(spots, i, availaibleSpots))
@@ -44,6 +44,17 @@ def main():
         vehicle = Vehicle(str(i), random.choice(list(VehicleType)))
         ticket = parkingLot.park(vehicle)
         tickets.append(ticket)
+
+    for i, ticket in enumerate(tickets):
+        if ticket:
+            parkingLot.unPark(ticket.ticketId, datetime.now() + timedelta(hours=i))
+    
+    tickets: List[Ticket] = []       
+
+    for i in range(numSpots + numFloors):
+            vehicle = Vehicle(str(i), random.choice(list(VehicleType)))
+            ticket = parkingLot.park(vehicle)
+            tickets.append(ticket)
 
     for i, ticket in enumerate(tickets):
         if ticket:
