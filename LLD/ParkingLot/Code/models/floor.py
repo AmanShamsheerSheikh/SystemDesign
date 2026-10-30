@@ -22,6 +22,6 @@ class Floor:
 
     def freeSpot(self, spot: Spot):
         spot.release()
-        self.availableSpots[spot.spotId] = spot
+        self.availableSpots[spot.type].append(spot)
     
     

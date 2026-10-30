@@ -13,9 +13,9 @@ class ParkingLot:
         self.activeTickets: dict[str, Ticket] = {}
         self.pricingStrategy: PricingStrategy = pricingStrategy
 
-    def generateTicket(self, spot: Spot, vehicle: Vehicle):
+    def generateTicket(self, spot: Spot, vehicle: Vehicle, floor: Floor):
         ticketId: str = uuid.uuid4()
-        ticket = Ticket(ticketId, vehicle, spot)
+        ticket = Ticket(ticketId, vehicle, spot, floor)
         self.activeTickets[ticketId] = ticket
         return ticket
 
@@ -24,17 +24,14 @@ class ParkingLot:
         for floor in self.floors:
             spot = floor.findAndAssignEmptySpot(vehicle)
             if spot:
-                break
-        if spot:
-            print(f"Vehicle parked at spot {spot.spotId} on floor {spot.floorNumber}")
-            return self.generateTicket(spot, vehicle)
-        else:
-            print("No Spot Present")
-            return None
+                print(f"Vehicle parked at spot {spot.spotId} on floor {spot.floorNumber}")
+                return self.generateTicket(spot, vehicle, floor)
+        print("No Spot Present")
+        return None
 
     def unPark(self, ticketId: str, currentTime: datetime):
         ticket = self.activeTickets[ticketId]
-        ticket.spot.release()
+        ticket.floor.freeSpot(ticket.spot)
         self.activeTickets.pop(ticket.ticketId)
         price = self.pricingStrategy.calculatePrice(ticket, currentTime)
         print(f"Vehicle unparked, total price: {price}")

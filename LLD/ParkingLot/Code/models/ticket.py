@@ -1,12 +1,14 @@
 from models.vehicle import Vehicle
 from models.spot import Spot
+from models.floor import Floor
 from datetime import datetime
 
 class Ticket:
-    def __init__(self, id: str, vehicle: Vehicle, spot: Spot):
+    def __init__(self, id: str, vehicle: Vehicle, spot: Spot, floor: Floor):
         self.ticketId: str = id
         self.spot: Spot = spot
         self.vehicle: Vehicle = vehicle
+        self.floor: Floor = floor
         self.parkTime = datetime.now()
 
     def generateReceipt(self):
